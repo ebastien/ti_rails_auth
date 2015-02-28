@@ -15,8 +15,8 @@ class TiDeviseAuth::GrantsHeaderAuthenticable < ::Devise::Strategies::Base
   def authenticate!
     resource = email && mapping.to.find_by_email(email)
     if resource
-      if resource.respond_to? :grants=
-        resource.grants = grants
+      if resource.respond_to? :controls=
+        resource.controls = grants['controls']
       end
       success! resource
     else
