@@ -15,8 +15,8 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["Rakefile", "README.md"]
 
-  s.add_dependency "rails", "~> 3.2.17"
-  s.add_dependency "devise", "~> 2.2.3"
+  s.add_dependency "rails"
+  s.add_dependency "devise"
   s.add_dependency "multi_json"
 
   s.add_development_dependency "rspec-rails"
