@@ -9,16 +9,12 @@ module TiDeviseAuth
       request.env['warden']
     end
 
-    def warden_scope
-      Rails.application.config.ti_devise_auth.scope
-    end
-
     def current_user
-      warden && warden.user(warden_scope)
+      warden && warden.user(Config.scope)
     end
 
     def authenticate
-      warden && warden.authenticate(scope: warden_scope)
+      warden && warden.authenticate(TiDeviseAuth::STRATEGY, scope: Config.scope)
     end
 
     def invalid_credentials

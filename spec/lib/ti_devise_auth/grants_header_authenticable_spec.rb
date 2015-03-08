@@ -6,45 +6,42 @@ describe TiDeviseAuth::GrantsHeaderAuthenticable do
 
   before do
     @request = double(:request)
-    allow(@request).to receive(:headers).and_return(headers)
+    allow(@request).to receive(:env).and_return(headers)
 
     @strategy = TiDeviseAuth::GrantsHeaderAuthenticable.new(nil)
     allow(@strategy).to receive(:request).and_return(@request)
 
     @user = double(:user)
-    allow(@user).to receive(:grants=) { |grants| @grants = grants }
+    allow(@user).to receive(:controls=) { |c| @controls = c }
 
     @user_class = double(:user_class)
     allow(@user_class).to receive(:find_by_email).with('jon.snow@ti.com')
                                                  .and_return(@user)
 
-    @mapping = double(:mapping)
-    allow(@mapping).to receive(:to).and_return(@user_class)
-
-    allow(@strategy).to receive(:mapping).and_return(@mapping)
+    allow(TiDeviseAuth::Config).to receive(:model).and_return(@user_class)
   end
 
   context "with valid trusted headers" do
 
     let!(:headers) do
-      { 'From' => 'jon.snow@ti.com',
-        'X-Grants' => Base64.encode64(MultiJson.dump({
-          'knows' => 'nothing'
+      { 'HTTP_FROM' => 'jon.snow@ti.com',
+        'HTTP_X_GRANTS' => Base64.encode64(MultiJson.dump({
+          'controls' => { 'knows' => 'nothing' }
         })) }
     end
 
     it "authenticates" do
       expect(@strategy).to be_valid
       expect(@strategy.authenticate!).to eq(:success)
-      expect(@grants).to eq({ 'knows' => 'nothing' })
+      expect(@controls).to eq({ 'knows' => 'nothing' })
     end
   end
 
   context "with invalid trusted headers" do
 
     let!(:headers) do
-      { 'From' => 'jon.snow@ti.com',
-        'X-Grants' => Base64.encode64("invalid grants") }
+      { 'HTTP_FROM' => 'jon.snow@ti.com',
+        'HTTP_X_GRANTS' => Base64.encode64("invalid grants") }
     end
 
     it "does not authenticate" do

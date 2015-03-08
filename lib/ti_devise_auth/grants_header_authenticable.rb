@@ -1,54 +1,57 @@
 # encoding: utf-8
-
+require 'warden'
+require 'base64'
 require 'multi_json'
 
-# Support for grants HTTP header authentication in Devise
-class TiDeviseAuth::GrantsHeaderAuthenticable < ::Devise::Strategies::Base
+module TiDeviseAuth
+  # Support for grants HTTP header authentication in Warden
+  class GrantsHeaderAuthenticable < ::Warden::Strategies::Base
 
-  attr_accessor :grants
-  attr_accessor :email
+    attr_accessor :grants
+    attr_accessor :email
 
-  def valid?
-    !authorization_header && email! && grants!
-  end
-
-  def authenticate!
-    resource = email && mapping.to.find_by_email(email)
-    if resource
-      if resource.respond_to? :controls=
-        resource.controls = grants['controls']
-      end
-      success! resource
-    else
-      fail!
+    def valid?
+      !authorization_header && email! && grants!
     end
-  end
 
-  private
+    def authenticate!
+      resource = email && Config.model.find_by_email(email)
+      if resource
+        if resource.respond_to? :controls=
+          resource.controls = grants['controls']
+        end
+        success! resource
+      else
+        fail!
+      end
+    end
 
-  def grants_header
-    request.headers['X-Grants']
-  end
+    private
 
-  def from_header
-    request.headers['From']
-  end
+    def grants_header
+      request.env['HTTP_X_GRANTS']
+    end
 
-  def grants!
-    self.grants ||= if grants_header
-                      begin
-                        MultiJson.load Base64.decode64(grants_header)
-                      rescue MultiJson::LoadError
-                        nil
+    def from_header
+      request.env['HTTP_FROM']
+    end
+
+    def authorization_header
+      request.env['HTTP_AUTHORIZATION']
+    end
+
+    def grants!
+      self.grants ||= if grants_header
+                        begin
+                          MultiJson.load Base64.decode64(grants_header)
+                        rescue MultiJson::LoadError
+                          nil
+                        end
                       end
-                    end
-  end
+    end
 
-  def email!
-    self.email ||= from_header.presence
-  end
-
-  def authorization_header
-    request.headers['Authorization']
+    def email!
+      self.email ||= from_header
+    end
   end
 end
