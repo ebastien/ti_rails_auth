@@ -1,24 +1,24 @@
 # encoding: utf-8
 
 require 'rails/railtie'
-require 'ti_devise_auth/grants_header_authenticable'
+require 'ti_rails_auth/grants_header_authenticable'
 
-module TiDeviseAuth
+module TiRailsAuth
 
   STRATEGY = :grants_header_authenticable
 
   class Railtie < Rails::Railtie
     
-    config.ti_devise_auth = ActiveSupport::OrderedOptions.new
-    config.ti_devise_auth.scope = :user
-    config.ti_devise_auth.devise = false
+    config.ti_rails_auth = ActiveSupport::OrderedOptions.new
+    config.ti_rails_auth.scope = :user
+    config.ti_rails_auth.devise = false
 
     config.after_initialize do
-      Warden::Strategies.add TiDeviseAuth::STRATEGY, GrantsHeaderAuthenticable
+      Warden::Strategies.add TiRailsAuth::STRATEGY, GrantsHeaderAuthenticable
     end
 
-    initializer "ti_devise_auth.configure_rails_initialization" do |app|
-      unless app.config.ti_devise_auth.devise
+    initializer "ti_rails_auth.configure_rails_initialization" do |app|
+      unless app.config.ti_rails_auth.devise
         app.middleware.insert_before("ActionDispatch::ParamsParser",
                                      "Warden::Manager") do |manager|
           manager.failure_app = ->(env) { [401, {}, ['']] }
@@ -30,7 +30,7 @@ module TiDeviseAuth
 
   class Config
     def self.scope
-      Rails.application.config.ti_devise_auth.scope
+      Rails.application.config.ti_rails_auth.scope
     end
 
     def self.model

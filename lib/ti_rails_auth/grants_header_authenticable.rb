@@ -3,7 +3,7 @@ require 'warden'
 require 'base64'
 require 'multi_json'
 
-module TiDeviseAuth
+module TiRailsAuth
   # Support for grants HTTP header authentication in Warden
   class GrantsHeaderAuthenticable < ::Warden::Strategies::Base
 

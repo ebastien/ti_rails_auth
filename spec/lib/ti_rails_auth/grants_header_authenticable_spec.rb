@@ -1,14 +1,14 @@
 # encoding: utf-8
 
-require 'ti_devise_auth'
+require 'ti_rails_auth'
 
-describe TiDeviseAuth::GrantsHeaderAuthenticable do
+describe TiRailsAuth::GrantsHeaderAuthenticable do
 
   before do
     @request = double(:request)
     allow(@request).to receive(:env).and_return(headers)
 
-    @strategy = TiDeviseAuth::GrantsHeaderAuthenticable.new(nil)
+    @strategy = TiRailsAuth::GrantsHeaderAuthenticable.new(nil)
     allow(@strategy).to receive(:request).and_return(@request)
 
     @user = double(:user)
@@ -18,7 +18,7 @@ describe TiDeviseAuth::GrantsHeaderAuthenticable do
     allow(@user_class).to receive(:find_by_email).with('jon.snow@ti.com')
                                                  .and_return(@user)
 
-    allow(TiDeviseAuth::Config).to receive(:model).and_return(@user_class)
+    allow(TiRailsAuth::Config).to receive(:model).and_return(@user_class)
   end
 
   context "with valid trusted headers" do

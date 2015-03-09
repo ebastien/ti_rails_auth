@@ -1,1 +1,1 @@
-# TiDeviseAuth
+# TiRailsAuth

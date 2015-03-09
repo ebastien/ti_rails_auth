@@ -9,7 +9,7 @@ require "action_mailer/railtie"
 # require "rails/test_unit/railtie"
 
 Bundler.require(*Rails.groups)
-require "ti_devise_auth"
+require "ti_rails_auth"
 
 module TestApp
   class Application < Rails::Application

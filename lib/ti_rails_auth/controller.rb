@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'active_support/concern'
 
-module TiDeviseAuth
+module TiRailsAuth
   module Controller
     extend ActiveSupport::Concern
 
@@ -14,7 +14,7 @@ module TiDeviseAuth
     end
 
     def authenticate
-      warden && warden.authenticate(TiDeviseAuth::STRATEGY, scope: Config.scope)
+      warden && warden.authenticate(TiRailsAuth::STRATEGY, scope: Config.scope)
     end
 
     def invalid_credentials

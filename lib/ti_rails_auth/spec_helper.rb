@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-module TiDeviseAuth
+module TiRailsAuth
   module SpecHelper
     def sign_in(user)
       allow(controller).to receive(:authenticate).and_return(user)
