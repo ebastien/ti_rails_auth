@@ -11,7 +11,7 @@ module TiRailsAuth
     attr_accessor :email
 
     def valid?
-      !authorization_header && email! && grants!
+      email! && grants!
     end
 
     def authenticate!
@@ -34,10 +34,6 @@ module TiRailsAuth
 
     def from_header
       request.env['HTTP_FROM']
-    end
-
-    def authorization_header
-      request.env['HTTP_AUTHORIZATION']
     end
 
     def grants!
