@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'rails/railtie'
+require 'active_support/json'
 require 'ti_rails_auth/grants_header_authenticable'
 
 module TiRailsAuth

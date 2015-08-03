@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails"
   s.add_dependency "warden"
-  s.add_dependency "multi_json"
 
   s.add_development_dependency "rspec-rails"
 end

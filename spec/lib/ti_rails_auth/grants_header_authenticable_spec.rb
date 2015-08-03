@@ -25,7 +25,7 @@ describe TiRailsAuth::GrantsHeaderAuthenticable do
 
     let!(:headers) do
       { 'HTTP_FROM' => 'jon.snow@ti.com',
-        'HTTP_X_GRANTS' => Base64.encode64(MultiJson.dump({
+        'HTTP_X_GRANTS' => Base64.encode64(ActiveSupport::JSON.encode({
           'controls' => { 'knows' => 'nothing' }
         })) }
     end

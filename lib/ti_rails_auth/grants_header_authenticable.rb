@@ -1,7 +1,6 @@
 # encoding: utf-8
 require 'warden'
 require 'base64'
-require 'multi_json'
 
 module TiRailsAuth
   # Support for grants HTTP header authentication in Warden
@@ -39,8 +38,8 @@ module TiRailsAuth
     def grants!
       self.grants ||= if grants_header
                         begin
-                          MultiJson.load Base64.decode64(grants_header)
-                        rescue MultiJson::LoadError
+                          ActiveSupport::JSON.decode Base64.decode64(grants_header)
+                        rescue ActiveSupport::JSON.parse_error
                           nil
                         end
                       end
