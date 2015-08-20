@@ -19,6 +19,9 @@ module TiRailsAuth
         if resource.respond_to? :controls=
           resource.controls = grants['controls']
         end
+        if resource.respond_to? :settings=
+          resource.settings = grants['user_settings']
+        end
         success! resource
       else
         fail!
