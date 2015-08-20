@@ -13,6 +13,7 @@ describe TiRailsAuth::GrantsHeaderAuthenticable do
 
     @user = double(:user)
     allow(@user).to receive(:controls=) { |c| @controls = c }
+    allow(@user).to receive(:settings=) { |c| @settings = c }
 
     @user_class = double(:user_class)
     allow(@user_class).to receive(:find_by_email).with('jon.snow@ti.com')
@@ -26,7 +27,8 @@ describe TiRailsAuth::GrantsHeaderAuthenticable do
     let!(:headers) do
       { 'HTTP_FROM' => 'jon.snow@ti.com',
         'HTTP_X_GRANTS' => Base64.encode64(ActiveSupport::JSON.encode({
-          'controls' => { 'knows' => 'nothing' }
+          'controls'      => { 'knows' => 'nothing' },
+          'user_settings' => { 'wears' => 'black' }
         })) }
     end
 
@@ -34,6 +36,7 @@ describe TiRailsAuth::GrantsHeaderAuthenticable do
       expect(@strategy).to be_valid
       expect(@strategy.authenticate!).to eq(:success)
       expect(@controls).to eq({ 'knows' => 'nothing' })
+      expect(@settings).to eq({ 'wears' => 'black' })
     end
   end
 
